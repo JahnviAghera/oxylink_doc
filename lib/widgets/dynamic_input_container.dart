@@ -7,11 +7,13 @@ TextField buildDynamicInputContainer({
   Function(String)? onChanged,
   Widget? icon,
   VoidCallback? onIconTap,
+  TextEditingController? controller, // Added controller parameter
 }) {
   return TextField(
     keyboardType: inputType,
     obscureText: obscureText,
     onChanged: onChanged,
+    controller: controller, // Use the provided controller
     decoration: InputDecoration(
       border: OutlineInputBorder(),
       labelText: hintText,
@@ -22,6 +24,12 @@ TextField buildDynamicInputContainer({
         fontWeight: FontWeight.w400,
         height: 0,
       ),
+      suffixIcon: onIconTap != null
+          ? InkWell(
+        onTap: onIconTap,
+        child: icon ?? Icon(Icons.visibility),
+      )
+          : null,
     ),
   );
 }
