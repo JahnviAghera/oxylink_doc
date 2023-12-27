@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:untitled1/screens/email_verification_page.dart';
-import 'package:untitled1/widgets/dynamic_built_stat.dart';
-import 'package:untitled1/widgets/profile_avtar.dart';
+import 'package:untitled1/widgets1/dynamic_built_stat.dart';
+import 'package:untitled1/widgets1/patient_card.dart';
+import 'package:untitled1/widgets1/profile_avtar.dart';
 
 class HomePage extends StatefulWidget {
   final String userId;
@@ -16,12 +17,38 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late List<Map<String, dynamic>> _userData;
+  List<Map<String, dynamic>> patients = [];
 var index;
   @override
   void initState() {
     super.initState();
     _userData = [];
     _fetchUserData();
+    _fetchPatientData();
+  }
+  Future<void> _fetchPatientData() async {
+    final apiUrl = 'http://udhyog4.in/API/fetch_patient.php?doctorUserId=${widget.userId}';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+
+        setState(() {
+          patients = responseData
+              .map((patient) => Map<String, dynamic>.from(patient))
+              .toList();
+        });
+        print(patients);
+      } else {
+        // Handle errors
+        print('Failed to fetch patient data. Error ${response.statusCode}');
+      }
+    } catch (error) {
+      // Handle network errors
+      print('Error: $error');
+    }
   }
 
   Future<void> _fetchUserData() async {
@@ -54,11 +81,13 @@ var index;
 
   Future<void> _refreshData() async {
     await _fetchUserData();
+    await _fetchPatientData();
   }
 var email;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: RefreshIndicator(
         onRefresh: _refreshData,
         child: ListView.builder(
@@ -69,7 +98,7 @@ var email;
             if(userData['email_verified']!=1){
 
             }
-            if (userData['deleted'] != 0 && userData['emai_verified']==1) {
+            if (userData['deleted'] != 0 && userData['email_verified']!=1) {
               return SafeArea(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -105,7 +134,7 @@ var email;
                         decoration: ShapeDecoration(
                           shape: RoundedRectangleBorder(
                             side: BorderSide(
-                              width: 1,
+                              width: 0.5,
                               strokeAlign: BorderSide.strokeAlignCenter,
                               color: Color(0xDBD9D9D9),
                             ),
@@ -122,12 +151,35 @@ var email;
                               Container(
                                 child: Tooltip(
                                   message: 'Pending Prescription',
-                                  child: buildStatContainer('Pending Prescript', 20, Color(0xFFFEF9C3), Color(0xFFFEF9C3), Icons.access_time),
+                                  child: buildStatContainer('Pending Prescript', 20, Color(0xFFFEF9C3), Color(0xFFFACC15), Icons.access_time),
                                 ),
-                              )
+                              ),
                             ],
-                          )
+                          ),
+                          SizedBox(height: 20),
+                          buildStatContainer('Critical Alerts', 2, Color(0xFFFEE2E2), Color(0xFFEF4444), Icons.person),
                         ],
+                      ),
+                      SizedBox(height: 12),
+                      Container(
+                        width: 390,
+                        decoration: ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                              width: 0.5,
+                              strokeAlign: BorderSide.strokeAlignCenter,
+                              color: Color(0xDBD9D9D9),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            DynamicPatientCard(name: 'Jhone Doe', age: 20, gender: 'Male', oxygenFlow: 16, oxygenQuality: 90, heartRate: 112),
+                          ],
+                        ),
                       )
                     ],
                   ),

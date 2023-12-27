@@ -6,9 +6,9 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:quiver/async.dart';
 import 'package:untitled1/app_routes.dart';
-import '../widgets/dynamic_button.dart';
-import '../widgets/dynamic_input_container.dart';
-import '../widgets/dynamic_link.dart';
+import '../widgets1/dynamic_button.dart';
+import '../widgets1/dynamic_input_container.dart';
+import '../widgets1/dynamic_link.dart';
 import 'package:http/http.dart' as http;
 
 class EmailVerificationPage extends StatefulWidget {
@@ -170,6 +170,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                     text: 'Continue',
                     onPressed: () {
                       if (codeController.text == verificationCode) {
+
                         Navigator.pushNamed(context, AppRoutes.signInPage);
                       }
                     },
@@ -185,6 +186,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                   child: DynamicLink(
                     onTap: () {
                       if (countdown == 0) {
+                        updateUserEmailVerificationStatus(widget.email);
                         generateVerificationCode();
                       }
                     },
@@ -200,5 +202,25 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
       ),
     );
   }
+  Future<void> updateUserEmailVerificationStatus(String email) async {
+    final apiUrl = 'http://your-api-url/update_email_verified.php?email=$email';
 
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+
+        if (responseData['status'] == 'success') {
+          print('Email verification status updated successfully');
+        } else {
+          print('Failed to update email verification status: ${responseData['message']}');
+        }
+      } else {
+        print('Failed to connect to the server. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 }

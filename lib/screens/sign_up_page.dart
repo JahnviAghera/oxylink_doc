@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:untitled1/app_routes.dart';
 import 'package:untitled1/screens/email_verification_page.dart';
-import 'package:untitled1/widgets/dynamic_button.dart';
-import 'package:untitled1/widgets/dynamic_input_container.dart';
-import 'package:untitled1/widgets/dynamic_link.dart';
+import 'package:untitled1/widgets1/dynamic_button.dart';
+import 'package:untitled1/widgets1/dynamic_input_container.dart';
+import 'package:untitled1/widgets1/dynamic_link.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
@@ -188,7 +188,7 @@ class _SignUpPageState extends State<SignUpPage> {
           if (data['status'] == 'success') {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => EmailVerificationPage(email: email, password: password, username: username)),
+              MaterialPageRoute(builder: (context) => EmailVerificationPage(email: email)),
             );
           } else {
             // Handle registration error

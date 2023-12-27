@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:untitled1/app_routes.dart';
 import 'package:untitled1/screens/home_page.dart';
-import '../widgets/dynamic_button.dart';
-import '../widgets/dynamic_input_container.dart';
-import '../widgets/dynamic_link.dart';
+import '../widgets1/dynamic_button.dart';
+import '../widgets1/dynamic_input_container.dart';
+import '../widgets1/dynamic_link.dart';
 import 'package:http/http.dart' as http;
 
 class SignInPage extends StatefulWidget {
