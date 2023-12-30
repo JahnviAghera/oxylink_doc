@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 Widget buildStatContainer(String title, int count,Color bg, Color iconColor, IconData iconData) {
   return Container(
-    width: 171,
+    width: 164,
     height: 63,
     clipBehavior: Clip.antiAlias,
     decoration: ShapeDecoration(

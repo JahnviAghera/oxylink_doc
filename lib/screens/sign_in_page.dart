@@ -138,22 +138,22 @@ class _SignInPageState extends State<SignInPage> {
 
   Future<void> _login(BuildContext context) async {
     final String apiUrl =
-        'http://udhyog4.in/API/login.php?username=${usernameController.text}&password=${passwordController.text}';
+        'http://udhyog4.in/API/login.php?email=${usernameController.text}&password=${passwordController.text}';
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
-        print('Response: $data');
 
         if (data['status'] == 'success') {
           setState(() {
             isLoggedIn = true;
-            userId = data['userid'];
+            userId = data['userId'];
           });
+
+          // Check if the user is a doctor
           if (data['role'] != 'doctor') {
-            // Show Snackbar for non-doctor account
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('No such account registered. Please check your credentials.'),
@@ -167,9 +167,8 @@ class _SignInPageState extends State<SignInPage> {
             );
           }
         } else {
-          // Check if user is disabled
+          // Check if the user is disabled
           if (data['status'] == 'error' && data['message'] == 'User is disabled.') {
-            // Show Snackbar for disabled user
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('User is disabled. Please contact support.'),
@@ -195,5 +194,4 @@ class _SignInPageState extends State<SignInPage> {
       print('Error: $error');
     }
   }
-
 }

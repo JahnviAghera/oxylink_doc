@@ -11,7 +11,7 @@ class CircleAvatarWithName extends StatelessWidget {
     List<String> initials = fullName.split(' ').map((word) => word[0]).toList();
 
     // Combining the first letters to form the circle avatar text
-    String avatarText = initials.join('');
+    String avatarText = initials.join().substring(0, 2);
 
     return CircleAvatar(
       backgroundColor: Colors.blue, // You can customize the color
